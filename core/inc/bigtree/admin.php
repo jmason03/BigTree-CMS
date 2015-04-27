@@ -5342,7 +5342,7 @@
 			foreach ($manifest["components"]["field_types"] as $type) {
 				if ($type) {
 					$self_draw = $type["self_draw"] ? "'on'" : "NULL";
-					sqlquery("INSERT INTO bigtree_field_types (`id`,`name`,`use_cases`,`self_draw`,`extension`) VALUES ('".sqlescape($type["id"])."','".sqlescape($type["name"])."','".sqlescape($type["use_cases"])."',$self_draw,'$extension')");
+					sqlquery("INSERT INTO bigtree_field_types (`id`,`name`,`use_cases`,`self_draw`,`extension`) VALUES ('".sqlescape($type["id"])."','".sqlescape($type["name"])."','".sqlescape(json_encode($type["use_cases"]))."',$self_draw,'$extension')");
 				}
 			}
 
