@@ -2962,11 +2962,19 @@ var BigTreeMatrix = function(settings) {
 			// Try our best to find some way to describe the item
 			Title = Subtitle = "";
 			LastDialog.find(".matrix_title_field").each(function(index,el) {
-				var item = $(el).find("input[type=text],input[type=email],textarea,select").not("[type=file]");
+				var item = $(el).find("input[type=text],input[type=email],input[type=url],textarea,select").not("[type=file]");
 				if (item.length) {
 					if (item.is("select")) {
 						var value = $.trim(item.find("option:selected").text());
-					} else {
+					} else if(item.parent().hasClass('input_phone_3')) {
+						var tempValue = "";
+						item.parent().siblings('section').each(function(index, value){
+							tempValue = tempValue + "-" + $(this).children('input').val();
+						});
+						var value = $.trim(tempValue.substr(1));
+					}
+					
+					else {
 						var value = $.trim(item.val());
 					}
 					if (value) {
