@@ -6730,6 +6730,9 @@
 			$tags = BigTree::json($changes["_tags"],true);
 			unset($changes["_tags"]);
 
+			// Save the parent ID
+			$parent_id = $changes["parent"];
+
 			// Convert to an IPL
 			if (!empty($changes["external"])) {
 				$changes["external"] = $this->makeIPL($changes["external"]);
@@ -6765,7 +6768,7 @@
 				}
 
 				// Update existing draft and track
-				sqlquery("UPDATE bigtree_pending_changes SET changes = '$changes', tags_changes = '$tags', date = NOW(), user = '".$this->ID."', type = '$type' WHERE id = '".$existing_pending_change["id"]."'");
+				sqlquery("UPDATE bigtree_pending_changes SET changes = '$changes', tags_changes = '$tags', pending_page_parent = $parent_id, date = NOW(), user = '".$this->ID."', type = '$type' WHERE id = '".$existing_pending_change["id"]."'");
 				$this->track("bigtree_pages",$page,"updated-draft");
 
 			// We're submitting a change to a presently published page with no pending changes.
@@ -6779,7 +6782,7 @@
 				$changes = BigTree::json($diff,true);
 
 				// Create draft and track
-				sqlquery("INSERT INTO bigtree_pending_changes (`user`,`date`,`table`,`item_id`,`changes`,`tags_changes`,`type`,`title`) VALUES ('".$this->ID."',NOW(),'bigtree_pages','$page','$changes','$tags','EDIT','Page Change Pending')");
+				sqlquery("INSERT INTO bigtree_pending_changes (`user`,`date`,`table`,`item_id`,`changes`,`tags_changes`,`type`,`title`,`pending_page_parent`) VALUES ('".$this->ID."',NOW(),'bigtree_pages','$page','$changes','$tags','EDIT','Page Change Pending',$parent_id)");
 				$this->track("bigtree_pages",$page,"saved-draft");
 			}
 
